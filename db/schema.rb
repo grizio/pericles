@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190926081509) do
+ActiveRecord::Schema.define(version: 20190927112500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -301,6 +301,7 @@ ActiveRecord::Schema.define(version: 20190926081509) do
     t.boolean "request_is_collection", default: false, null: false
     t.string "request_root_key"
     t.bigint "security_scheme_id"
+    t.jsonb "additional_swagger_description", default: {}
     t.index ["request_resource_representation_id"], name: "index_routes_on_request_resource_representation_id"
     t.index ["resource_id"], name: "index_routes_on_resource_id"
     t.index ["security_scheme_id"], name: "index_routes_on_security_scheme_id"

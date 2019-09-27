@@ -7,9 +7,16 @@ module Swagger
       @security_scheme = create(:security_scheme, project: @project)
       @resource = create(:pokemon, project: @project)
       @representation = @resource.resource_representations.first
-      @route = create(:route, resource: @resource, request_resource_representation: @representation, security_scheme: @security_scheme)
+      @route = create(
+          :route,
+          resource: @resource,
+          request_resource_representation: @representation,
+          security_scheme: @security_scheme,
+          additional_swagger_description: '{"x-key": "value"}'
+      )
       @response = create(:response, route: @route, resource_representation: @representation)
       @decorator = Swagger::ProjectDecorator.new(@project.reload)
+      @route_decorator = Swagger::RouteDecorator.new(@route)
     end
 
     test 'generated json is valid according to spec' do
@@ -39,6 +46,11 @@ module Swagger
           }
       }
       assert_equal generated_security_schemes, expected_security_schemes
+    end
+
+    test 'generated route json contains valid additional swagger description' do
+      generated_route = @route_decorator.to_swagger
+      assert_equal generated_route["x-key"], "value"
     end
   end
 end

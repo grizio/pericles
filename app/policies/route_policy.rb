@@ -6,6 +6,7 @@ class RoutePolicy < ProjectRelatedPolicy
       :url,
       :resource_id,
       :security_scheme_id,
+      :additional_swagger_description,
       :request_resource_representation_id,
       :request_is_collection,
       :request_root_key,

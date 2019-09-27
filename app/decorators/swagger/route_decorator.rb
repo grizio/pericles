@@ -2,14 +2,16 @@ class Swagger::RouteDecorator < Draper::Decorator
   delegate_all
 
   def to_swagger
-    {
+    ({
       tags: [resource.name],
       description: description,
       parameters: parameters,
       responses: responses,
       requestBody: request_body,
       security: security
-    }.select { |_, v| v.present? }
+    })
+      .merge(additional_swagger_description)
+      .select { |_, v| v.present? }
   end
 
   def responses

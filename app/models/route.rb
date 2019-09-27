@@ -22,10 +22,35 @@ class Route < ApplicationRecord
   validate :request_resource_representation_must_belongs_to_project
   validate :security_scheme_must_belongs_to_project
 
+  validate :additional_swagger_description_is_valid_json
+  validate :additional_swagger_description_is_hash
+
   audited
   has_associated_audits
 
   before_save :remove_obsolete_fields
+
+  def additional_swagger_description=(val)
+    if val.is_a? String
+      val = begin
+        JSON.parse(val)
+      rescue JSON::ParserError
+        val
+      end
+    end
+
+    super(val)
+  end
+
+  def additional_swagger_description_is_valid_json
+    JSON.parse(additional_swagger_description) if additional_swagger_description.is_a? String
+  rescue JSON::ParserError
+    errors.add(:additional_swagger_description, 'is not a valid JSON') if additional_swagger_description.is_a? String
+  end
+
+  def additional_swagger_description_is_hash
+    errors.add(:additional_swagger_description, 'should be a hash') unless additional_swagger_description.is_a? Hash
+  end
 
   def request_json_instance
     GenerateJsonInstanceService.new(request_json_schema).execute if request_json_schema
