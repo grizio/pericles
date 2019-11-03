@@ -309,11 +309,9 @@ ActiveRecord::Schema.define(version: 20191101093918) do
     t.integer "request_resource_representation_id"
     t.boolean "request_is_collection", default: false, null: false
     t.string "request_root_key"
-    t.bigint "security_scheme_id"
     t.string "deprecated"
     t.index ["request_resource_representation_id"], name: "index_routes_on_request_resource_representation_id"
     t.index ["resource_id"], name: "index_routes_on_resource_id"
-    t.index ["security_scheme_id"], name: "index_routes_on_security_scheme_id"
   end
 
   create_table "schemes", id: :serial, force: :cascade do |t|
@@ -321,6 +319,13 @@ ActiveRecord::Schema.define(version: 20191101093918) do
     t.string "regexp"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "security_scheme_assignments", id: :serial, force: :cascade do |t|
+    t.integer "security_scheme_id"
+    t.integer "route_id"
+    t.index ["route_id"], name: "index_security_scheme_assignments_on_route_id"
+    t.index ["security_scheme_id"], name: "index_security_scheme_assignments_on_security_scheme_id"
   end
 
   create_table "security_schemes", force: :cascade do |t|
